@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 分身起步包 — The Hope</title>
+<meta name="description" content="30 分鐘建立一個認識你的 AI 分身：Claude Code 與 Codex 都適用的起步包，含記憶系統、選配模組與使用指南。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep-blue:#1D292E; --midnight:#3C5464; --yellow:#FFCC32;
+    --sand:#C8956A; --cream:#EDE0D4; --cream-light:#F6F0EA; --white:#fff;
+    --fg-tertiary:rgba(29,41,46,.55);
+    --font-display:'Montserrat',sans-serif;
+    --font-zh:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+    --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
+    --shadow-low:0 2px 8px rgba(29,41,46,.12);
+    --shadow-mid:0 8px 24px rgba(29,41,46,.16);
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font-zh);background:var(--cream-light);color:var(--deep-blue);
+    font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:80px 0}
+  @media(max-width:640px){section{padding:56px 0}}
+
+  .label{
+    font-family:var(--font-display);font-size:11px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--sand);
+    display:block;margin-bottom:16px;
+  }
+  h1{font-family:var(--font-zh);font-size:clamp(32px,5.5vw,60px);font-weight:900;line-height:1.25;letter-spacing:-.015em}
+  h2{font-size:clamp(24px,3.4vw,38px);font-weight:900;line-height:1.35;letter-spacing:-.01em;margin-bottom:16px}
+  h3{font-size:19px;font-weight:700;line-height:1.5;margin-bottom:8px}
+  p{margin-bottom:16px}
+  p:last-child{margin-bottom:0}
+  a{color:inherit}
+  .lead{font-size:clamp(17px,2vw,20px);line-height:1.7;color:var(--midnight)}
+  .muted{color:var(--fg-tertiary);font-size:15px}
+  strong{font-weight:700}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+    background:rgba(29,41,46,.07);padding:2px 6px;border-radius:4px;
+  }
+
+  /* NAV */
+  nav{
+    position:sticky;top:0;z-index:50;background:rgba(29,41,46,.97);
+    backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-family:var(--font-display);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--white);text-decoration:none}
+  .brand span{color:var(--yellow)}
+  .nav-links{display:flex;gap:24px}
+  .nav-links a{font-size:14px;color:rgba(255,255,255,.7);text-decoration:none;transition:color .15s}
+  .nav-links a:hover{color:var(--yellow)}
+  @media(max-width:720px){.nav-links{display:none}}
+
+  /* HERO */
+  .hero{background:var(--deep-blue);color:var(--white);padding:96px 0 88px;position:relative;overflow:hidden}
+  .hero::after{
+    content:'';position:absolute;right:-160px;top:-160px;width:480px;height:480px;
+    border-radius:50%;background:radial-gradient(circle,rgba(255,204,50,.14),transparent 68%);
+  }
+  .hero .wrap{position:relative;z-index:1}
+  .hero h1{max-width:17em}
+  .hero h1 em{font-style:normal;color:var(--yellow)}
+  .hero .lead{color:rgba(237,224,212,.85);max-width:34em;margin-top:24px}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);
+    font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+    padding:14px 26px;border-radius:var(--radius-sm);border:none;cursor:pointer;
+    text-decoration:none;transition:opacity .15s,transform .15s;
+  }
+  .btn:hover{opacity:.86;transform:translateY(-1px)}
+  .btn-primary{background:var(--yellow);color:var(--deep-blue)}
+  .btn-outline{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.4);padding:12px 24px}
+  .hero-note{margin-top:28px;font-size:14px;color:rgba(237,224,212,.6)}
+
+  /* GRID + CARDS */
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:860px){.g3,.g2{grid-template-columns:1fr}}
+  .card{
+    background:var(--white);border-radius:var(--radius-md);padding:28px;
+    box-shadow:var(--shadow-low);transition:box-shadow .25s,transform .25s;
+  }
+  .card.link:hover{box-shadow:var(--shadow-mid);transform:translateY(-3px)}
+  .card a{text-decoration:none}
+  .ico{
+    width:40px;height:40px;border-radius:var(--radius-sm);background:var(--cream);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--deep-blue);
+  }
+  .ico svg{width:20px;height:20px}
+  .card p{font-size:15px;color:var(--midnight)}
+
+  /* STEPS */
+  .step{display:flex;gap:24px;padding:28px 0;border-top:1px solid rgba(29,41,46,.12)}
+  .step:last-child{border-bottom:1px solid rgba(29,41,46,.12)}
+  .step-n{
+    flex:none;width:44px;height:44px;border-radius:50%;background:var(--deep-blue);color:var(--yellow);
+    font-family:var(--font-display);font-weight:800;font-size:17px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step-body{flex:1;min-width:0}
+  @media(max-width:640px){.step{gap:16px}.step-n{width:36px;height:36px;font-size:15px}}
+
+  /* CODE BLOCK */
+  .code{
+    position:relative;background:var(--deep-blue);color:var(--cream);
+    border-radius:var(--radius-sm);padding:16px 56px 16px 18px;margin:14px 0;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;
+    line-height:1.6;overflow-x:auto;white-space:pre;
+  }
+  .code b{color:var(--yellow);font-weight:400}
+  .copy{
+    position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);border:none;
+    color:var(--cream);width:32px;height:32px;border-radius:6px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:background .15s;
+  }
+  .copy:hover{background:rgba(255,204,50,.25)}
+  .copy svg{width:15px;height:15px}
+  .copy.done{background:var(--yellow);color:var(--deep-blue)}
+  .say{
+    background:var(--yellow);color:var(--deep-blue);border-radius:var(--radius-sm);
+    padding:16px 20px;margin:14px 0;font-weight:700;font-size:17px;
+  }
+
+  /* SECTION VARIANTS */
+  .warm{background:var(--cream)}
+  .dark{background:var(--deep-blue);color:var(--white)}
+  .dark h2{color:var(--white)}
+  .dark .lead{color:rgba(237,224,212,.85)}
+  .dark .label{color:var(--yellow)}
+  .dark .card{background:rgba(255,255,255,.06);box-shadow:none;border:1px solid rgba(255,255,255,.1)}
+  .dark .card h3{color:var(--white)}
+  .dark .card p{color:rgba(237,224,212,.8)}
+  .dark .ico{background:rgba(255,204,50,.14);color:var(--yellow)}
+
+  /* TABLE */
+  .tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px}
+  .tbl th,.tbl td{text-align:left;padding:14px 16px;border-bottom:1px solid rgba(29,41,46,.12);vertical-align:top}
+  .tbl th{
+    font-family:var(--font-display);font-size:11px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--fg-tertiary);
+  }
+  .tbl td:first-child{font-weight:700;white-space:nowrap}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* CHECKLIST */
+  .check{list-style:none;margin-top:8px}
+  .check li{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(29,41,46,.15);font-size:15.5px}
+  .check li:last-child{border-bottom:none}
+  .check svg{width:19px;height:19px;flex:none;margin-top:4px;color:var(--sand)}
+  .dark .check li{border-color:rgba(255,255,255,.14)}
+  .dark .check svg{color:var(--yellow)}
+
+  .pill{
+    display:inline-block;font-family:var(--font-display);font-size:10px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;
+    background:var(--deep-blue);color:var(--yellow);margin-bottom:12px;
+  }
+  .arrow{font-family:var(--font-display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--deep-blue);display:inline-flex;align-items:center;gap:6px;margin-top:16px}
+  .arrow svg{width:15px;height:15px}
+
+  footer{background:var(--deep-blue);color:rgba(237,224,212,.65);padding:56px 0;font-size:14px}
+  footer a{color:var(--yellow);text-decoration:none}
+  footer .flinks{display:flex;flex-wrap:wrap;gap:20px;margin-bottom:20px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">THE HOPE <span>／ AI 分身起步包</span></a>
+    <div class="nav-links">
+      <a href="#start">三步驟開始</a>
+      <a href="#habit">三個口訣</a>
+      <a href="#modules">選配模組</a>
+      <a href="#verify">怎麼驗收它</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="label">The Hope 內部工具</span>
+    <h1>30 分鐘，建立一個<em>認識你</em>的 AI 分身。</h1>
+    <p class="lead">
+      不是再開一個聊天視窗，而是一個記得你是誰、你負責什麼、你糾正過它什麼的工作夥伴。
+      你用得越久，它越像你的同事 —— 前提是你知道怎麼養它。這份起步包就是在教這件事。
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#start">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+        三步驟開始
+      </a>
+      <a class="btn btn-outline" href="https://github.com/j6259676-bot/cc-starter-kit" target="_blank" rel="noopener">前往 GitHub</a>
+    </div>
+    <p class="hero-note">Claude Code 與 Codex 都適用。不需要會寫程式，全程用中文對話完成。</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <span class="label">你會得到什麼</span>
+    <h2>三件事，一次設定完</h2>
+    <p class="lead" style="max-width:40em;margin-bottom:36px">
+      這包東西本身只是一組 Markdown 檔案，沒有魔法。真正的價值是它幫你把「AI 該記得什麼」變成看得見、改得動的檔案。
+    </p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>一個認識你的分身</h3>
+        <p>它知道你的名字、角色、負責的事工、說話習慣，還有哪些字你絕對不能被寫錯。每次開新對話都不用重講一遍。</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg></div>
+        <h3>一套會長大的記憶</h3>
+        <p>你糾正過的錯、踩過的坑、正在跑的專案，全部落成檔案。它不會「忘記」，因為它每次開工都會回頭讀。</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg></div>
+        <h3>依角色選配的模組</h3>
+        <p>牧養、設計媒體、資料工具，還有「做大東西」的流程模組。裝你需要的就好，不用全裝。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="warm" id="start">
+  <div class="wrap">
+    <span class="label">三步驟開始</span>
+    <h2>從零到能用，大約 30 分鐘</h2>
+    <p class="lead" style="max-width:40em;margin-bottom:8px">
+      前兩步是安裝，第三步才是重點 —— 你只要說一句話，剩下的它會帶你走。
+    </p>
+
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <h3>安裝工具</h3>
+        <p>打開 Mac 內建的「終端機」（用 Spotlight 搜尋 Terminal 就有），貼上其中一行：</p>
+        <div class="code"><button class="copy" aria-label="複製"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>curl -fsSL https://claude.ai/install.sh | bash</div>
+        <p class="muted">用 Codex 的話改裝 Codex CLI（<code>npm i -g @openai/codex</code>），其餘步驟完全一樣。</p>
+        <p style="margin-top:12px">裝好後輸入 <code>claude</code>（或 <code>codex</code>）會引導你登入。你需要公司提供的帳號，或自己的訂閱。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <h3>下載這包東西</h3>
+        <p>不熟 git 也沒關係，直接下載 ZIP，解壓縮到你想放的位置（建議放 <code>~/Documents/my-agent</code>）：</p>
+        <a class="btn btn-primary" href="https://github.com/j6259676-bot/cc-starter-kit/archive/refs/heads/main.zip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          下載 ZIP
+        </a>
+        <p class="muted" style="margin-top:16px">
+          會用 git 的人可以直接 clone，記得 <code>rm -rf .git</code> 斷開跟模板的連結 ——
+          這個資料夾之後會存你的個人偏好與事工資料，<strong>不要</strong>推回共用的模板。
+        </p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <h3>叫它帶你完成設定</h3>
+        <p>在終端機切到那個資料夾，啟動 AI：</p>
+        <div class="code"><button class="copy" aria-label="複製"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>cd ~/Documents/my-agent
+claude</div>
+        <p>然後打這五個字，按 Enter：</p>
+        <div class="say">帶我完成設定</div>
+        <p>
+          接下來它會訪談你（你是誰、負責什麼、最花時間的三件事、有沒有絕對不能寫錯的字），
+          把答案寫進你的設定檔，推薦適合你的模組，最後<strong>帶你做一件今天真的要做的事</strong>。
+          全程你只要回答問題，不用自己改任何檔案。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="label">工具相容性</span>
+    <h2>Claude Code 用得了，Codex 也一樣</h2>
+    <p class="lead" style="max-width:42em">
+      整包的核心是純文字的規則檔，不綁任何一家工具。差別只在「它開機時會去讀哪個檔名」，而這個差異已經幫你處理好了。
+    </p>
+    <div class="tbl-scroll">
+      <table class="tbl">
+        <thead><tr><th>你用的工具</th><th>它讀的規則檔</th><th>你要做什麼</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code</td><td><code>CLAUDE.md</code></td><td>什麼都不用做</td></tr>
+          <tr><td>Codex</td><td><code>AGENTS.md</code></td><td>什麼都不用做 —— 包裡已經附了一份，它會指向 CLAUDE.md</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:20px">
+      進階：Codex 使用者如果不想多一層指路，在 <code>~/.codex/config.toml</code> 加一行
+      <code>project_doc_fallback_filenames = ["CLAUDE.md"]</code>，它就會直接讀 CLAUDE.md。<br>
+      唯一真正有差的是斜線指令（<code>/brainstorm</code> 那些）：Claude Code 可以自訂，Codex 不行 ——
+      在 Codex 裡改成直接跟它說「照 <code>commands/plan.md</code> 的規則做」，效果一樣。
+    </p>
+  </div>
+</section>
+
+<section class="dark" id="habit">
+  <div class="wrap">
+    <span class="label">最重要的一課</span>
+    <h2>它不是搜尋引擎，是新同事</h2>
+    <p class="lead" style="max-width:42em;margin-bottom:36px">
+      想像今天來了一位很聰明、但完全不認識你的新同事。你不會期待他第一天就懂你的習慣，
+      你會在他做錯的時候告訴他。差別只在於：它的「記住」不是靠腦袋，是靠檔案。
+      <strong style="color:var(--yellow)">檔案裡沒寫的，它下次就忘了。</strong>
+      所以整套系統的關鍵動作只有一個：發現它做錯 → 當場糾正 → 確認它寫進了記憶。
+    </p>
+    <div class="grid g3">
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg></div>
+        <h3>「記下來」</h3>
+        <p>任何它該永遠記住的事，就這樣說：「記下來：以後寫給小組長的訊息，開頭不要用『親愛的』。」<br>可以追問「你記在哪個檔案？」來確認它真的寫了。</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>「為什麼你這樣做？」</h3>
+        <p>它的行為讓你意外時，先問原因，不要只是重來。它看得到自己的設定檔，通常能指出哪條規則太模糊，接著說「那幫我改掉」就好。</p>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></div>
+        <h3>「要不要建成固定流程？」</h3>
+        <p>同一類事情做到第三次（週報、會議紀錄、社群貼文），就叫它把步驟包成固定流程，以後一句話跑完。</p>
+      </div>
+    </div>
+    <p style="margin-top:32px;color:rgba(237,224,212,.7)">
+      沉默地自己改掉它的產出，是養 AI 分身最浪費的行為 —— 你改了一百次，它還是不知道。
+      完整說明在 <a href="https://github.com/j6259676-bot/cc-starter-kit/blob/main/GROWTH.md" target="_blank" rel="noopener" style="color:var(--yellow)">GROWTH.md</a>，
+      設定完那天請務必讀一次。
+    </p>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="wrap">
+    <span class="label">上手之後最該學的事</span>
+    <h2>怎麼驗收它，才不會被「應該可以了」騙</h2>
+    <p class="lead" style="max-width:42em">
+      新手最貴的失敗長這樣：它說「已經更新好了」，你相信了，兩週後才發現根本沒生效。
+      這包的設定檔已經要求它「說完成前要有證據」，你要學會的是<strong>追問那句話</strong>：
+    </p>
+    <div class="say" style="max-width:42em">你的證據是什麼？</div>
+    <p style="max-width:42em">
+      正確的回答長這樣：「我打開了線上網址，看到新的標題。」<br>
+      不合格的回答長這樣：「我已經更新了，應該可以了。」——
+      <strong>「應該」兩個字出現就要警覺。</strong>
+    </p>
+    <ul class="check" style="max-width:42em;margin-top:24px">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span><strong>改網頁或工具</strong>：打開實際的線上網址看到改動，不是本機檔案、不是編輯器裡跑成功</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span><strong>寄信</strong>：寄件備份裡看得到那封信；測試信要寄到外部信箱，寄給自己收不到</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span><strong>寫進表單或資料庫</strong>：回頭重讀寫入的那一筆，確認內容跟預期一樣</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span><strong>它卡住的時候</strong>：同一件事失敗兩次就該停下來報告，不該一直試第三次、第四次</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="warm" id="modules">
+  <div class="wrap">
+    <span class="label">選配模組</span>
+    <h2>裝你需要的就好</h2>
+    <p class="lead" style="max-width:40em;margin-bottom:36px">
+      設定完成後，對它說「幫我安裝 modules/某某模組」即可。前三個依角色選，第四個不分角色 —— 只看你有沒有想做的「大東西」。
+    </p>
+    <div class="grid g2">
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/tree/main/modules/pastoral" target="_blank" rel="noopener">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>pastoral — 牧養、小組、關懷</h3>
+        <p>Notion 任務系統、1on1 紀錄流程（下次談話前自動調出上次脈絡）、會議紀錄整理，以及群發信踩坑精選 —— 寄活動邀請給幾百人怎麼不被退信。</p>
+        <span class="arrow">看模組 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+      </a>
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/tree/main/modules/design-media" target="_blank" rel="noopener">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>
+        <h3>design-media — 設計、媒體、社群</h3>
+        <p>The Hope 設計系統（官方色票、字體、圖示規則）與對外文案語氣守則，讓它產出的東西一眼就是我們的樣子。</p>
+        <span class="arrow">看模組 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+      </a>
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/tree/main/modules/data-tools" target="_blank" rel="noopener">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></div>
+        <h3>data-tools — 資料、表單、工具開發</h3>
+        <p>Google Sheet 統計流程、Apps Script 開發守則，還有前人兩年累積的 18 條踩坑筆記 —— 包含兩次把資料弄壞的真實事故，直接繼承不用重摔。</p>
+        <span class="arrow">看模組 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+      </a>
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/tree/main/modules/dev-workflow" target="_blank" rel="noopener">
+        <span class="pill">新</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></div>
+        <h3>dev-workflow — 做「大東西」的流程</h3>
+        <p>一個報名頁、一份完整教材、一個查資料的小工具 —— 那種講一句話講不完、做錯要重來的事。五步流程加五個指令，<strong>不限程式開發</strong>。</p>
+        <span class="arrow">看模組 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+      </a>
+    </div>
+
+    <div class="card" style="margin-top:32px;background:var(--white)">
+      <h3>為什麼要有「流程」這種東西？</h3>
+      <p style="margin-top:8px">
+        因為新手用 AI 最常見的失敗是：講一句話，它洋洋灑灑做出一大坨東西，你看完覺得「不是我要的」，
+        但已經分不清哪裡開始歪掉，只好整個重來。原因幾乎都不是 AI 不夠聰明，而是<strong>還沒共識就開工</strong>。
+      </p>
+      <p style="margin-top:12px">
+        dev-workflow 把「做」拆成五個關口 —— 拷問、規格、切片、實作、檢查 ——
+        每一關都要你點頭才往下走。核心一句話：<strong>共識前不動工，一片驗收完才做下一片。</strong>
+      </p>
+      <p class="muted" style="margin-top:12px">
+        什麼時候不要用它：寫一封信、改個錯字、回答一個問題。判準是「你講得完的事情，直接做」。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="label">卡住了？</span>
+    <h2>先問它本人</h2>
+    <p class="lead" style="max-width:42em">
+      九成的問題 —— 語氣不對、格式不對、它自作主張、你想加新功能 —— 它自己就能解決。
+      因為它看得到自己的設定檔，你只要說：
+    </p>
+    <div class="say" style="max-width:42em">我想要 X，但你剛剛做成 Y，為什麼？我該怎麼調整設定？</div>
+    <p style="max-width:42em">
+      真正需要問人的只有兩種：<strong>帳號與權限</strong>（安裝、登入、公司帳號授權），
+      還有<strong>「其他人都怎麼用」</strong>的經驗交流。
+    </p>
+    <div class="grid g3" style="margin-top:36px">
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/blob/main/GROWTH.md" target="_blank" rel="noopener">
+        <h3>GROWTH.md</h3>
+        <p class="muted">最重要的一份文件：三個口訣、每週 10 分鐘保養、常見問題。設定完那天讀。</p>
+      </a>
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/blob/main/CLAUDE.md" target="_blank" rel="noopener">
+        <h3>CLAUDE.md</h3>
+        <p class="muted">分身的核心規則本體。想知道它為什麼那樣做，答案通常在這裡。</p>
+      </a>
+      <a class="card link" href="https://github.com/j6259676-bot/cc-starter-kit/blob/main/SETUP.md" target="_blank" rel="noopener">
+        <h3>SETUP.md</h3>
+        <p class="muted">初次設定的訪談腳本，寫給 AI 讀的。好奇「它等一下會問我什麼」可以先看。</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flinks">
+      <a href="https://github.com/j6259676-bot/cc-starter-kit" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="https://github.com/j6259676-bot/cc-starter-kit/archive/refs/heads/main.zip">下載 ZIP</a>
+      <a href="https://github.com/j6259676-bot/cc-starter-kit/blob/main/GROWTH.md" target="_blank" rel="noopener">GROWTH.md</a>
+      <a href="https://github.com/j6259676-bot/cc-starter-kit/tree/main/modules" target="_blank" rel="noopener">選配模組</a>
+    </div>
+    <p>The Hope 線上分部　AI 分身起步包　·　有問題或想貢獻模組，直接在 repo 開 issue。</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var text = btn.parentNode.textContent.trim();
+    navigator.clipboard.writeText(text).then(function(){
+      btn.classList.add('done');
+      setTimeout(function(){ btn.classList.remove('done'); }, 1400);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

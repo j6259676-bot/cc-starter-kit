@@ -39,6 +39,12 @@ cp modules/dev-workflow/commands/*.md .claude/commands/
 
 裝好後在 Claude Code 裡輸入 `/` 就會看到 `brainstorm`、`spec`、`plan`、`build`、`review` 五個指令。
 
+**用 Codex 的話**：Codex 的斜線指令是內建的、不能自訂，所以不要複製到 `.claude/commands/`，改成把整個 `commands/` 資料夾留在原地，然後直接對它說：
+
+> 照 `modules/dev-workflow/commands/plan.md` 的規則，把這件事拆成切片。
+
+效果一樣 — 那五個檔案本來就只是寫給 AI 讀的指示。想要更順手的話，Codex 也支援把它們包成 skills（放 `.codex/skills/<名稱>/SKILL.md`，需要 name 與 description 的 frontmatter），可以請 AI 幫你轉換。
+
 ### 2. 合併規則
 
 把 [CLAUDE-snippet.md](CLAUDE-snippet.md) 的內容加進使用者的 CLAUDE.md（先給使用者看過再改）。重點是那條「口語提出新東西時自動進入流程」— 使用者不需要記得打指令。

@@ -1,6 +1,9 @@
 # Claude Code 起步包 — 建立你的 AI 分身
 
-這是給 The Hope 夥伴的 Claude Code 起始套件。照著做，30 分鐘內你會有：
+> **給第一次來的人：先看圖文版使用指南 → https://j6259676-bot.github.io/cc-starter-kit/**
+> 這份 README 是同樣的內容，但網頁版比較好讀，也方便直接傳給別人。
+
+這是給 The Hope 夥伴的 AI 分身起始套件（Claude Code 與 Codex 都適用）。照著做，30 分鐘內你會有：
 
 1. 一個認識你的 AI 分身（知道你是誰、負責什麼事工、說話習慣）
 2. 一套會越用越聰明的記憶系統（你糾正過的錯，它不會再犯）
@@ -50,6 +53,19 @@ claude
 Claude 會照 [SETUP.md](SETUP.md) 一步步問你問題、寫好你的個人設定、推薦適合你角色的模組。全程不用自己改任何檔案。
 
 ---
+
+### 用 Codex（或其他終端機 AI）也可以
+
+整包的核心是 Markdown 規則檔，不綁任何一個工具。差別只有「它讀哪個檔名」：
+
+| 工具 | 讀的規則檔 | 怎麼辦 |
+|---|---|---|
+| Claude Code | `CLAUDE.md` | 什麼都不用做 |
+| Codex | `AGENTS.md` | 已經附在這包裡了，它會指向 CLAUDE.md |
+
+Codex 使用者如果想跳過那層指路，在 `~/.codex/config.toml` 加一行 `project_doc_fallback_filenames = ["CLAUDE.md"]`，它就會直接讀 CLAUDE.md。
+
+第 3 步的「帶我完成設定」在兩邊都一樣有效 — 那句話觸發的是 SETUP.md，跟工具無關。
 
 ## 這個資料夾裡有什麼
 
