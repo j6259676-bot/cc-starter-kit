@@ -69,9 +69,10 @@ Claude 會照 [SETUP.md](SETUP.md) 一步步問你問題、寫好你的個人設
 
 | 模組 | 適合誰 | 內容 |
 |---|---|---|
-| [modules/pastoral](modules/pastoral/) | 牧養、小組、關懷 | Notion 任務系統、1on1 紀錄流程、會議紀錄整理 |
+| [modules/pastoral](modules/pastoral/) | 牧養、小組、關懷 | Notion 任務系統、1on1 紀錄流程、會議紀錄整理、群發信踩坑 |
 | [modules/design-media](modules/design-media/) | 設計、媒體、社群 | The Hope 設計系統（色票、字體、圖示規則）、文案語氣守則 |
 | [modules/data-tools](modules/data-tools/) | 資料、表單、工具開發 | Google Sheet 整理、Apps Script 開發流程、前人踩坑精選 |
+| [modules/dev-workflow](modules/dev-workflow/) | 任何要做「大東西」的人 | 做一個報名頁、一份完整教材、一個小工具時的五步流程，不限程式 |
 
 ## 卡住了？
 

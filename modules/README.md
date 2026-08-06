@@ -4,9 +4,10 @@
 
 | 模組 | 適合誰 | 裝了會多什麼 |
 |---|---|---|
-| [pastoral](pastoral/) | 牧養、小組、關懷 | Notion 任務與 1on1 紀錄流程、會議紀錄整理、牧養用語規則 |
+| [pastoral](pastoral/) | 牧養、小組、關懷 | Notion 任務與 1on1 紀錄流程、會議紀錄整理、牧養用語規則、群發信踩坑 |
 | [design-media](design-media/) | 設計、媒體、社群 | The Hope 設計系統（色票、字體、圖示）、對外文案守則 |
 | [data-tools](data-tools/) | 資料、表單、工具開發 | Google Sheet 整理流程、Apps Script 開發守則、前人踩坑精選 |
+| [dev-workflow](dev-workflow/) | 任何要做「大東西」的人 | 五步流程（拷問→規格→切片→實作→檢查）＋五個指令，不限程式 |
 
 ## 每個模組的結構
 
