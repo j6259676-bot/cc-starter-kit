@@ -1,95 +1,78 @@
-# Claude Code 起步包 — 建立你的 AI 分身
+# AI 分身起步包 — 建立一個會記得你、會跟你磨合的 AI 助理
 
-> **給第一次來的人：先看圖文版使用指南 → https://j6259676-bot.github.io/cc-starter-kit/**
-> 這份 README 是同樣的內容，但網頁版比較好讀，也方便直接傳給別人。
+> **第一次來的人：先看圖文版使用指南 → https://j6259676-bot.github.io/cc-starter-kit/**
+> 這份 README 是同樣的內容，網頁版比較好讀，也方便直接傳給別人。
 
-這是給 The Hope 夥伴的 AI 分身起始套件（Claude Code 與 Codex 都適用）。照著做，30 分鐘內你會有：
+任何人都能用：老師、行政、自己接案、教會同事都一樣。不需要會寫程式，全程用中文對話完成。照著做，30 分鐘內你會有：
 
-1. 一個認識你的 AI 分身（知道你是誰、負責什麼事工、說話習慣）
-2. 一套會越用越聰明的記憶系統（你糾正過的錯，它不會再犯）
-3. 依你的角色選配的工具模組（牧養、設計媒體、資料工具）
+1. **一個認識你的 AI 助理**：知道你是誰、做什麼工作、說話習慣、哪些事要先問你
+2. **一套看得見的記憶**：你糾正過的錯，它寫成檔案，下次不再犯；你隨時打得開檢查
+3. **一套會自己長大的機制**：同樣的錯犯兩次，它主動提案升級成規則；同樣的事做三次，它主動提案變成固定流程
 
-這個包最重要的目的不是「給你設定檔」，而是**讓你學會自己養這個 AI 分身**。設定檔只是骨架，肉是你每天用的過程中長出來的。
+這個包最重要的不是「給你設定檔」，而是**讓你學會跟它一起工作** — 設定檔只是骨架，肉是你每天用的過程中長出來的。
 
 ---
 
-## 快速開始（三步驟）
+## 快速開始（三步驟，不用開終端機）
 
-### 第 1 步：安裝 Claude Code
+### 第 1 步：安裝 Claude 桌面 App
 
-打開「終端機」（Terminal，Mac 內建，用 Spotlight 搜尋就有），貼上：
+到 [claude.com/download](https://claude.com/download) 下載 Claude 桌面 App，安裝後登入。需要付費方案（Pro 以上）才能用 Code 功能。
+
+### 第 2 步：下載這個資料夾
+
+在 GitHub 頁面點綠色 `Code` 按鈕 → `Download ZIP`（或直接點[這裡下載](https://github.com/j6259676-bot/cc-starter-kit/archive/refs/heads/main.zip)），解壓縮後把資料夾改名叫 `my-agent`，放到「文件」裡。
+
+這個資料夾之後會存你的個人偏好和工作資料，是你自己的私人空間。
+
+### 第 3 步：叫它帶你完成設定
+
+1. 打開 Claude 桌面 App，切到上方的 **Code** 分頁
+2. 選擇剛剛的 `my-agent` 資料夾開始新對話
+3. 打這五個字，按 Enter：
+
+> 帶我完成設定
+
+它會照 [SETUP.md](SETUP.md) 一次問你一個問題（你是誰、最花時間的三件事、你希望它怎麼跟你確認事情），把答案寫進設定，最後**帶你做一件今天真的要做的事**。全程你只要回答問題，不用自己改任何檔案。
+
+---
+
+### 習慣用終端機的人
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-裝好後輸入 `claude`，會引導你登入。你需要 Claude Pro 或 Max 訂閱（或公司提供的帳號）。
-
-### 第 2 步：下載這個資料夾
-
-**方法 A（不會 git 也沒關係）**：在 GitHub 頁面點綠色 `Code` 按鈕 → `Download ZIP` → 解壓縮到你想放的位置（建議 `~/Documents/my-agent`）。
-
-**方法 B（會用 git）**：
-
 ```bash
-git clone <這個 repo 的網址> ~/Documents/my-agent
-cd ~/Documents/my-agent
-rm -rf .git   # 斷開跟模板的連結，這個資料夾之後是你的私人空間
+cd ~/Documents/my-agent && claude
 ```
 
-注意：這個資料夾之後會存你的個人偏好與事工資料，**不要**把它推回共用的模板 repo。
-
-### 第 3 步：讓 Claude 帶你完成設定
-
-```bash
-cd ~/Documents/my-agent
-claude
-```
-
-然後對它說：
-
-> 帶我完成設定
-
-Claude 會照 [SETUP.md](SETUP.md) 一步步問你問題、寫好你的個人設定、推薦適合你角色的模組。全程不用自己改任何檔案。
-
----
-
-### 用 Codex（或其他終端機 AI）也可以
-
-整包的核心是 Markdown 規則檔，不綁任何一個工具。差別只有「它讀哪個檔名」：
-
-| 工具 | 讀的規則檔 | 怎麼辦 |
-|---|---|---|
-| Claude Code | `CLAUDE.md` | 什麼都不用做 |
-| Codex | `AGENTS.md` | 已經附在這包裡了，它會指向 CLAUDE.md |
-
-Codex 使用者如果想跳過那層指路，在 `~/.codex/config.toml` 加一行 `project_doc_fallback_filenames = ["CLAUDE.md"]`，它就會直接讀 CLAUDE.md。
-
-第 3 步的「帶我完成設定」在兩邊都一樣有效 — 那句話觸發的是 SETUP.md，跟工具無關。
+用 Codex 的人：包裡附了 `AGENTS.md`，它會指向 CLAUDE.md，其餘步驟一樣。想讓 Codex 直接讀 CLAUDE.md，在 `~/.codex/config.toml` 加一行 `project_doc_fallback_filenames = ["CLAUDE.md"]`。
 
 ## 這個資料夾裡有什麼
 
 | 檔案／資料夾 | 用途 |
 |---|---|
-| `CLAUDE.md` | AI 分身的核心規則。每次開啟 Claude Code 都會自動讀取 |
-| `SETUP.md` | 初次設定的引導腳本（給 Claude 讀的） |
-| `GROWTH.md` | **最重要的一份文件**：怎麼讓 AI 分身越用越聰明 |
-| `000_Agent/memory/` | 記憶系統：偏好、踩過的坑、專案脈絡 |
+| `CLAUDE.md` | AI 助理的核心規則。每次開工都會自動讀 |
+| `SETUP.md` | 初次設定的訪談腳本（給 AI 讀的） |
+| `GROWTH.md` | **最重要的一份文件**：怎麼讓它越用越懂你 |
+| `000_Agent/memory/` | 記憶：認識你、你的糾正、進行中的事、東西放在哪 |
 | `100_Todo/` | 工作區：草稿、進行中專案、封存 |
-| `200_Reference/writing-samples/` | 放你自己的寫作範例，AI 學你的語氣 |
-| `modules/` | 選配模組：牧養、設計媒體、資料工具 |
+| `200_Reference/writing-samples/` | 放你自己寫過的東西，讓它學你的語氣 |
+| `modules/` | 選配模組（不裝也完全可以） |
 
 ## 選配模組
 
-設定完成後，依你的角色安裝（對 Claude 說「幫我安裝 modules/某某模組」即可）：
+設定時它會依你的工作推薦，也可以之後對它說「幫我安裝 modules/某某模組」：
 
 | 模組 | 適合誰 | 內容 |
 |---|---|---|
-| [modules/pastoral](modules/pastoral/) | 牧養、小組、關懷 | Notion 任務系統、1on1 紀錄流程、會議紀錄整理、群發信踩坑 |
-| [modules/design-media](modules/design-media/) | 設計、媒體、社群 | The Hope 設計系統（色票、字體、圖示規則）、文案語氣守則 |
-| [modules/data-tools](modules/data-tools/) | 資料、表單、工具開發 | Google Sheet 整理、Apps Script 開發流程、前人踩坑精選 |
-| [modules/dev-workflow](modules/dev-workflow/) | 任何要做「大東西」的人 | 做一個報名頁、一份完整教材、一個小工具時的五步流程，不限程式 |
+| [modules/dev-workflow](modules/dev-workflow/) | 任何要做「大東西」的人 | 一整學期教材、一個報名頁、一個小工具的五步流程，不限程式 |
+| [modules/data-tools](modules/data-tools/) | 常處理表單、報表、試算表的人 | Google 試算表整理、Apps Script 開發守則、前人踩坑精選 |
+| [modules/the-hope](modules/the-hope/) | The Hope 同事（必裝） | 教會用語、教會帳號、會友個資規則 |
+| [modules/pastoral](modules/pastoral/) | The Hope 牧養、小組、關懷 | 1on1 紀錄流程、會議紀錄整理、群發信踩坑 |
+| [modules/design-media](modules/design-media/) | The Hope 設計、媒體、社群 | The Hope 設計系統、對外文案守則 |
 
 ## 卡住了？
 
-先問 Claude 本人：「我想要 X，但你剛剛做成 Y，為什麼？我該怎麼調整設定？」——它看得到自己的設定檔，通常能直接告訴你要改哪裡。這也是 [GROWTH.md](GROWTH.md) 教的第一課。
+先問它本人：「我想要 X，但你剛剛做成 Y，為什麼？我該怎麼調整設定？」它看得到自己的設定檔，通常能直接告訴你要改哪裡。這也是 [GROWTH.md](GROWTH.md) 教的第一課。
